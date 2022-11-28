@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+<meta charset="UTF-8" />
+<title>CRUD Java</title>
+<h:outputStylesheet library="lib" name="style.css"/>
+</h:head>
+<h:body>
+	<h2>Cadastro de Usuários</h2>
+	<div id="contenty">
+		<h:form>
+		<p:messages autoUpdate="true"/>
+			<p:commandButton value="Novo" onclick="PF('newDialogWidgetVar').show()"/>
+			<p></p>
+			<p:panelGrid columns="2">
+				<p:outputLabel value="Nome:" for="name"/>
+				<p:outputLabel value="CPF:" for="cpf"/>	
+				<p:inputText id="name" value="#{registrionsBean.nameSearch}"/>
+				<p:inputMask id="cpf" mask="999.999.999-99" value="#{registrionsBean.cpfSearch}"/>
+				<p:outputLabel value="Inicio:" for="init"/>
+				<p:outputLabel value="Fim:" for="end"/>
+				<h:panelGroup>	
+					<p:inputMask id="init" mask="99/99/9999" label="Data inicial">
+						<f:convertDateTime pattern="dd/MM/yyyy"/>
+					</p:inputMask>
+					<p:message for="init"></p:message>
+				</h:panelGroup>
+				<p:inputMask id="end" mask="99/99/9999" label="Data final">
+					<f:convertDateTime pattern="dd/MM/yyyy"/>
+				</p:inputMask>
+			</p:panelGrid>
+		<p></p>
+			<p:commandButton value="Filtrar" actionListener="#{registrionsBean.search}" update="tableFilter"/>
+		<p></p>
+			<p:dataTable id="tableFilter" value="#{registrionsBean.registrions}" 
+						var="regs" emptyMessage="Sem registro"
+						paginator="true" rows="5"
+						paginatorPosition="bottom">
+				<p:column headerText="ID">
+					<h:outputText value="#{regs.id}"/>
+				</p:column>
+
+				<p:column headerText="Data Cadastro">
+					<h:outputText value="#{regs.registryDate}"/>
+				</p:column>
+				
+				<p:column headerText="Nome">
+					<h:outputText value="#{regs.name}"/>
+				</p:column>
+				
+				<p:column headerText="CPF">
+					<h:outputText value="#{regs.cpf}"/>
+				</p:column>
+				
+				<p:column headerText="Email">
+					<h:outputText value="#{regs.email}"/>
+				</p:column>
+				
+				<p:column headerText="Perfil">
+					<h:outputText value="#{regs.profile}"/>
+				</p:column>
+				
+				<p:column headerText="Ação">
+					<p:commandButton icon="pi pi-list" id="detail" value="Detalhar" onclick="PF('detailDialogWidgetVar').show()"/>
+					<p:commandButton icon="pi pi-pencil" id="edit" value="Editar" onclick="PF('editDialogWidgetVar').show()"/>
+					<p:commandButton icon="pi pi-trash" id="delete" value="Excluir" actionListener="#{registrionsBean.remove}"/>
+				</p:column>
+			</p:dataTable>
+			<p></p>
+			<p:dialog header="Detalhes" widgetVar="detailDialogWidgetVar" modal="true"
+						resizable="false" closeOnEscape="true">
+				<p:dataTable id="tableDetail" value="#{adressesBean.adresses}" 
+						var="details" emptyMessage="Sem registro"
+						paginator="true" rows="5"
+						paginatorPosition="bottom">
+					<p:column headerText="Logradouro">
+						<h:outputText value="#{details.adress}"/>
+					</p:column>
+					<p:column headerText="cep">
+						<h:outputText value="#{details.cep}"/>
+					</p:column>
+				</p:dataTable>
+			</p:dialog>
+			
+			<p:dialog header="Editar" widgetVar="editDialogWidgetVar" modal="true"
+						resizable="false" closeOnEscape="true">
+				<p:panelGrid columns="2">
+					<p:outputLabel  value="Nome:" for="editName"/>
+					<p:inputText id="editName" value="#{registrionsBean.nameSearch}"/>
+					<p:outputLabel  value="CPF:" for="editCpf"/>
+					<p:inputText id="editCpf" value="#{registrionsBean.cpfSearch}"/>
+					<p:outputLabel  value="Email:" for="editEmail"/>
+					<p:inputText id="editEmail" value="#{registrionsBean.emailSearch }"/>
+				</p:panelGrid>
+			</p:dialog>
+		</h:form>
+		
+		<h:form id="newDialog">
+			<p:dialog header="Novo" widgetVar="newDialogWidgetVar" modal="true"
+						resizable="false" closeOnEscape="true">
+				<p:panelGrid columns="1">
+					<p:outputLabel value="Nome:" for="reg_name" />
+					<h:panelGroup>
+						<p:inputText id="reg_name" required="true" label="Nome do usuário" />
+						<p:message for="reg_name"></p:message>
+					</h:panelGroup>
+					<p:outputLabel value="CPF:" for="reg_cpf" />
+					<h:panelGroup>
+						<p:inputMask id="reg_cpf" mask="999.999.999-99" required="true" label="CPF do usuário">
+							<f:validateLength minimum="14" maximum="14" />
+						</p:inputMask>
+						<p:message for="reg_cpf"></p:message>
+					</h:panelGroup>
+					<p:outputLabel value="Email:" for="reg_email" />
+					<h:panelGroup>
+						<p:inputText id="reg_email" required="true"
+							label="Email do usuário" />
+						<p:message for="reg_email"></p:message>
+					</h:panelGroup>
+					<p:outputLabel value="Perfil:" for="reg_profile" />
+					<h:panelGroup>
+						<p:selectOneMenu id="reg_profile"
+							value="#{registrionsBean.type}" required="true">
+							<f:selectItem itemLabel="Selecione..." />
+							<f:selectItems value="#{registrionsBean.type}" var="type"
+								itemLabel="#{type.description}" itemValue="#{type}" />
+						</p:selectOneMenu>
+						<p:message for="reg_profile"></p:message>
+					</h:panelGroup>
+					<h:outputText value="Endereço" />
+					<p:outputLabel value="Logradouro:" for="reg_adress" />
+					<p:inputText id="reg_adress" />
+					<p:outputLabel value="CEP:" for="reg_cep" />
+					<p:inputMask id="reg_cep" mask="99.999-999"/>
+					<p:commandButton value="Adicionar"
+						update="newDialog"  resetValues="true"/>
+				</p:panelGrid>
+				<p:dataTable id="tableDetailAdress" value="#{adressesBean.adresses}" 
+						var="details" emptyMessage="Sem registro"
+						paginator="true" rows="5" 
+						paginatorPosition="bottom">
+					<p:column headerText="Logradouro">
+						<h:outputText value="#{details.adress}"/>
+					</p:column>
+					<p:column headerText="CEP">
+						<h:outputText value="#{details.cep}"/>
+					</p:column>
+					<p:column headerText="Ação">
+						<p:commandButton icon="pi pi-trash" id="delete" value="Excluir" actionListener="#{adressesBean.remove}"/>
+					</p:column>
+				</p:dataTable>
+			</p:dialog>
+		</h:form>
+	</div>
+	
+	<footer>CRUD Java com Maven e Hibernates</footer>
+
+</h:body>
+</html>

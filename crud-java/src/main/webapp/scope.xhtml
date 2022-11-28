@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+<h:head>
+<meta charset="UTF-8" />
+<title>CRUD Java</title>
+<h:outputStylesheet library="lib" name="style.css"/>
+</h:head>
+<h:body>
+	<div id="contenty">
+		<h:form>
+			<h:panelGrid columns="2">
+				<h:outputLabel value="Number: "/>
+				<h:outputText value="#{registrionsBean.NUMBER}"/>
+				<h:outputLabel />
+				<h:commandButton value="Add"/>	
+			</h:panelGrid>
+		</h:form>
+	</div>
+	
+	<footer>CRUD Java com Maven e Hibernates</footer>
+
+</h:body>
+</html>
